@@ -4,16 +4,19 @@ import android.content.Context
 import android.util.SparseBooleanArray
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.CheckBox
-import android.widget.TextView
+import android.widget.*
+import br.com.sankhya.labs.travelexpense.model.Expense
 import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.find
 import java.util.*
+import java.util.concurrent.Future
 
 
-class GridListAdapter( context: Context, private val arrayList: ArrayList<String>) : BaseAdapter() {
+class GridListAdapter(private val ctx: Context, private val arrayList: ArrayList<Expense>,val funcao : () ->Future<Unit>) : ArrayAdapter<Expense>(ctx, 0, arrayList) {
 
-    private val context = AnkoContext.createReusable(context, this)
+    private val context = AnkoContext.createReusable(ctx, this)
+    private var main : MainActivity? = null
+
 
     //    Retornar os id da checkbox  selecionada
 
@@ -28,7 +31,7 @@ class GridListAdapter( context: Context, private val arrayList: ArrayList<String
         return arrayList.size
     }
 
-    override fun getItem(i: Int): Any {
+    override fun getItem(i: Int): Expense? {
         return arrayList[i]
     }
 
@@ -36,32 +39,55 @@ class GridListAdapter( context: Context, private val arrayList: ArrayList<String
         return i.toLong()
     }
 
-    override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
+        main = MainActivity()
 
-        var viewHolder = ViewHolder()
 
-        val view = view ?: GridListAdapterUi().createView(context)
+       val view = convertView ?: GridListAdapterUi().createView(context)
+       val iconImageView = view.find<ImageView>(GridListAdapterUi.ICON)
+        val  typeTextView = view.find<TextView>(GridListAdapterUi.TYPE)
+        val   dateTextView = view.find<TextView>(GridListAdapterUi.DATE)
+        val   costTextView = view.find<TextView>(GridListAdapterUi.COST)
+        val    containerLinearLayout = view.find<LinearLayout>(GridListAdapterUi.LAYOUT_VIEW)
+        val checkBox  = view.find<CheckBox>(GridListAdapterUi.CHECKED)
+        val expense = getItem(position)
 
-        viewHolder.label = view.findViewById<View>(GridListAdapterUi.lable) as TextView
-        viewHolder.checkBox = view.findViewById(GridListAdapterUi.CHECKED) as CheckBox
 
-        view.tag = viewHolder
 
-        viewHolder = view.tag as ViewHolder
 
-        viewHolder.label!!.text = arrayList[i]
-        viewHolder.checkBox!!.isChecked = selectedIds!!.get(i)
+        if(expense != null) {
+           checkBox!!.text = arrayList.get(position).descExpense
+          checkBox!!.isChecked = selectedIds!!.get(position)
+            costTextView?.text = arrayList.get(position).typeExpense
+            if (expense.cost != null){
+               costTextView?.text= ("R$${expense.cost}")
+            }
 
-        viewHolder.checkBox!!.setOnClickListener { checkCheckBox(i, !selectedIds!!.get(i)) }
 
-        viewHolder.label!!.setOnClickListener { checkCheckBox(i, !selectedIds!!.get(i)) }
+            checkBox!!.setOnClickListener {
+                checkCheckBox(position, !selectedIds!!.get(position))
 
+
+            }
+
+            containerLinearLayout!!.setOnClickListener { checkCheckBox(position, !selectedIds!!.get(position)
+
+            )
+                funcao.invoke()
+           //     (MainActivity)ctx.sumAllcost()
+
+            }
+        }
         return view
     }
 
     private inner class ViewHolder {
-        var label: TextView? = null
         var checkBox: CheckBox? = null
+        var iconImageView : ImageView? =null
+        var typeTextView :TextView? =null
+        var dateTextView : TextView? =null
+        var costTextView : TextView? = null
+        var containerLinearLayout : LinearLayout ? =null
     }
 
 
@@ -81,5 +107,7 @@ class GridListAdapter( context: Context, private val arrayList: ArrayList<String
 
         notifyDataSetChanged()
     }
+
+
 
 }
