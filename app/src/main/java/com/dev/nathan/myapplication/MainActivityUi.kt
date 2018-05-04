@@ -25,22 +25,6 @@ class MainActivityUi:AnkoComponent<MainActivity>{
 
 
 
-    lateinit var navigationFilter: NavigationView
-
-
-
-    lateinit var applyFilterContainer : RelativeLayout
-    lateinit var applyFilterButton : Button
-
-
-    private lateinit var moreImageView: ImageView
-
-    private lateinit var tabLayout: TabLayout
-    lateinit var viewPager: ViewPager
-
-    lateinit var filterImageView: ImageView
-
-    lateinit var drawerLayout: DrawerLayout
     lateinit var listView: ListView
     lateinit var  selectButton :Button
     lateinit var deleteRows : Button

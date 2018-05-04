@@ -81,14 +81,6 @@ class GridListAdapter(private val ctx: Context, private val arrayList: ArrayList
         return view
     }
 
-    private inner class ViewHolder {
-        var checkBox: CheckBox? = null
-        var iconImageView : ImageView? =null
-        var typeTextView :TextView? =null
-        var dateTextView : TextView? =null
-        var costTextView : TextView? = null
-        var containerLinearLayout : LinearLayout ? =null
-    }
 
 
 // Remover todas as caixas de selecao
