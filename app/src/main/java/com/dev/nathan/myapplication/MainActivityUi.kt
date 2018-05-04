@@ -43,6 +43,8 @@ class MainActivityUi:AnkoComponent<MainActivity>{
     lateinit var drawerLayout: DrawerLayout
     lateinit var listView: ListView
     lateinit var  selectButton :Button
+    lateinit var deleteRows : Button
+    lateinit var rowsChecked : Button
 
 
     override fun createView(ui: AnkoContext<MainActivity>)= with(ui) {
@@ -55,6 +57,20 @@ class MainActivityUi:AnkoComponent<MainActivity>{
             }.lparams(matchParent){
                 alignParentTop()
             }
+            deleteRows=   button("delete"){
+                id= View.generateViewId()
+
+            }.lparams(matchParent){
+
+                below(selectButton)
+            }
+           rowsChecked=   button("Pegas as checadas"){
+                id= View.generateViewId()
+
+            }.lparams(matchParent){
+
+               below(deleteRows)
+            }
             listView = listView{
                 val footer = Space(context)
                 footer.layoutParams = AbsListView.LayoutParams(matchParent, dip(80))
@@ -62,7 +78,7 @@ class MainActivityUi:AnkoComponent<MainActivity>{
                 dividerHeight = dip(0)
                 setFooterDividersEnabled(false)
             }.lparams(matchParent){
-                below(selectButton)
+                below( rowsChecked)
             }
 
 
